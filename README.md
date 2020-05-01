@@ -1,29 +1,77 @@
-[![Python 2.7 3.7](https://img.shields.io/badge/python-2.7%20%7C%203.7-blue.svg)](https://www.python.org/)
-[![Build Status](https://dev.azure.com/shotgun-ecosystem/Toolkit/_apis/build/status/Frameworks/tk-framework-desktopclient?branchName=master)](https://dev.azure.com/shotgun-ecosystem/Toolkit/_build/latest?definitionId=75&branchName=master)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Linting](https://img.shields.io/badge/PEP8%20by-Hound%20CI-a873d1.svg)](https://houndci.com)
+# tk-playstore
 
-## Documentation
-This repository is a part of the Shotgun Pipeline Toolkit.
+tk-playstore is a set of tooling that allows us to release Shotgun Toolkit Apps to our own custom app store
 
-- For more information about this app and for release notes, *see the wiki section*.
-- For general information and documentation, click here: https://support.shotgunsoftware.com/entries/95441257
-- For information about Shotgun in general, click here: http://www.shotgunsoftware.com/toolkit
 
-## Using this app in your Setup
-All the apps that are part of our standard app suite are pushed to our App Store.
-This is where you typically go if you want to install an app into a project you are
-working on. For an overview of all the Apps and Engines in the Toolkit App Store,
-click here: https://support.shotgunsoftware.com/entries/95441247.
+## History
 
-## Have a Question?
-Don't hesitate to contact us! You can find us on support@shotgunsoftware.com
+The Shotgun Toolkit official App Store is structured in the following way:
 
-## Use the standalone client
+Each client site gets a ApiUser with the script_name/api_key accessible at https://yoursite.shotgunstudio.com/api3/sgtk_install_script when doing a POST request with `{"session_token": sg_isntance.get_session_token()}`.  
 
-This repository can be used as a command line tool. In order to make a request
-to a Shotgun Create, you can execute a the `create_client.py` file using `python create_client.py`
+The remote site is https://tank.shotgunstudio.com.
 
-## Build the vendors folder
+### Shotgun App Store Schema  
+There are several CustomNonProjectEntity types that have been setup to become an AppStore.  
 
-In order to re-build the Vendors folder, you need to run the `vendors.sh` on mac and on linux and the `vendors.bat` script on Windows. The `python` need to resolve to a valid Python2 interpreter and `python3` need to resolve to a valid Python3 interpreter.
+
+| Entity Type | Entity Display Name | Purpose |
+| ----------- | ------------------- | ------- |
+| CustomNonProjectEntity01 | Tank Core Version Name | Versions of tk-core |
+| CustomNonProjectEntity02 | Tank App Name (Internal Use Only) | Types of toolkit applications |
+| CustomNonProjectEntity03 | Tank Engine Name - DEPRECATED | Types of toolkit engines |
+| CustomNonProjectEntity04 | Tank Engine Version Name | Versions of a specific toolkit engine |
+| CustomNonProjectEntity05 | Tank App Version Name | Versions of a specific toolkit application |
+| CustomNonProjectEntity06 | App Category Name | Category of Application - Seems unused |
+| CustomNonProjectEntity07 | Tank Config Name - DEPRECATED | Different Pipeline Configs |
+| CustomNonProjectEntity08 | Tank Config Version Name | Versions of a specific pipeline config |
+| CustomNonProjectEntity09 | Tank Framework Version Name | Versions of a specific toolkit framework  |
+| CustomNonProjectEntity10 | Tank Document Name | Types of documents and documentation |
+| CustomNonProjectEntity11 | Tank Document Version Name | Versions and links to documents or documentation |
+| CustomNonProjectEntity12 | Shotgun Desktop Version Name | Shotgun Desktop binaries |
+| CustomNonProjectEntity13 | Tank Framework Name - DEPRECATED | Types of toolkit frameworks |
+| CustomNonProjectEntity14 | Vendor Name | Not sure... Just contains ShotgunSoftware and Baseblack |
+| CustomNonProjectEntity15 | Client Name | Client List... sort of half up to date... |
+
+## tk-playstore
+
+The toolkit playstore is a framework of tooling to allow you to host your own "Shotgun App Store"  
+
+This framework leverages the [register_descriptor hook](https://github.com/shotgunsoftware/tk-core/pull/768) that I wrote, allowing us to create a custom IODescriptor type.  
+
+# Installation
+
+Installation of tk-playstore is in a few parts.  
+
+
+## Release tools
+
+`tk-playstore-release` contains tooling that allow you to register new applications, engines and frameworks to your playstore.
+It also includes tooling to setup your site initially.    
+
+
+## Viewing Tools
+
+`tk-playstore-view` contains tooling to visualize your custom playstore.  
+
+
+## Descriptors
+
+`tk-playstore` contains `IODescriptorPlayStoreBase` in `io_descriptors/playstore.py` which is your baseclass descriptor for setting up your own PlayStore descriptor   
+
+
+To release applications to your own playstore automatically, see [Setting Up CI](#setting-up-ci)
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Setting Up CI
